@@ -13,6 +13,6 @@ class LogicTestCase(TestCase):
         res = operations(6, 13, "-")
         self.assertEqual(-7, res)
 
-    def test_plus(self):
+    def test_mul(self):
         res = operations(6, 13, "*")
         self.assertEqual(78, res)
