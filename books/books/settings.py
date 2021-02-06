@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # 'social_django',
+    'social_django',
 
     'store',
 ]
@@ -137,7 +137,7 @@ REST_FRAMEWORK = {
     )
 }
 
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+SOCIAL_AUTH_POSTGRES_JSONFIELD = False
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.github.GithubOAuth2',

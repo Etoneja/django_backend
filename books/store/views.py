@@ -21,7 +21,7 @@ class BookViewSet(ModelViewSet):
         SearchFilter,
         OrderingFilter
     ]
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     filter_fields = ["price"]
     search_fields = ["name", "author_name"]
     ordering_fields = ["price", "author_name"]
