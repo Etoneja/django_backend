@@ -1,3 +1,4 @@
+from django.db.models import Count, Case, When, Avg
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -15,8 +16,10 @@ from store.serializers import BookSerializer, UserBookSerializer
 
 
 class BookViewSet(ModelViewSet):
-
-    queryset = Book.objects.all()
+    queryset = Book.objects.all().annotate(
+        annotated_likes=Count(Case(When(userbookrelation__like=True, then=1))),
+        annotated_rating=Avg("userbookrelation__rate")
+    )
     serializer_class = BookSerializer
     filter_backends = [
         DjangoFilterBackend,
