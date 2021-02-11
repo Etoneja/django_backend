@@ -7,7 +7,10 @@ coverage==5.2.1
 cryptography==3.0
 defusedxml==0.7.0rc1
 Django==3.1
+django-debug-toolbar==3.2
+django-debug-toolbar-force==0.1.8
 django-filter==2.3.0
+django-nine==0.2.4
 djangorestframework==3.11.1
 idna==2.10
 Markdown==3.3.3

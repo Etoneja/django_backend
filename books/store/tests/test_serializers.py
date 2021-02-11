@@ -14,7 +14,7 @@ class BookSerializerTestCase(TestCase):
         user2 = User.objects.create(username="test_username2")
         user3 = User.objects.create(username="test_username3")
 
-        book1 = Book.objects.create(name="The Collector 1", price=24)
+        book1 = Book.objects.create(name="The Collector 1", price=24, owner=user1)
         book2 = Book.objects.create(name="The Collector 2", price=25)
 
         UserBookRelation.objects.create(user=user1, book=book1, like=True, rate=5)
@@ -37,18 +37,48 @@ class BookSerializerTestCase(TestCase):
                 "name": "The Collector 1",
                 "price": "24.00",
                 "author_name": "",
-                "likes_count": 3,
+                # "likes_count": 3,
                 "annotated_likes": 3,
-                "annotated_rating": "4.67"
+                "annotated_rating": "4.67",
+                "owner_name": "test_username1",
+                "readers": [
+                    {
+                        "first_name": "",
+                        "last_name": ""
+                    },
+                    {
+                        "first_name": "",
+                        "last_name": ""
+                    },
+                    {
+                        "first_name": "",
+                        "last_name": ""
+                    }
+                ]
             },
             {
                 "id": book2.id,
                 "name": "The Collector 2",
                 "price": "25.00",
                 "author_name": "",
-                "likes_count": 2,
+                # "likes_count": 2,
                 "annotated_likes": 2,
-                "annotated_rating": "3.50"
+                "annotated_rating": "3.50",
+                "owner_name": "",
+                "readers": [
+                    {
+                        "first_name": "",
+                        "last_name": ""
+                    },
+                    {
+                        "first_name": "",
+                        "last_name": ""
+                    },
+                    {
+                        "first_name": "",
+                        "last_name": ""
+                    }
+                ]
             },
         ]
         self.assertEqual(expected_data, data)
