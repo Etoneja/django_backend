@@ -2,7 +2,8 @@ import json
 
 from django.contrib.auth.models import User
 from django.db import connection
-from django.db.models import Count, Case, When, Avg
+from django.db.models import Count, Case, When, Avg, F, Value
+from django.db.models.functions import Coalesce
 from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from rest_framework import status
@@ -49,7 +50,8 @@ class BooksAPITestCase(APITestCase):
 
         books = Book.objects.all().annotate(
             annotated_likes=Count(Case(When(userbookrelation__like=True, then=1))),
-            annotated_rating=Avg("userbookrelation__rate")
+            annotated_rating=Avg("userbookrelation__rate"),
+            owner_name=Coalesce(F("owner__username"), Value(""))
         ).order_by("id")
 
         serialized_data = BookSerializer(
@@ -69,7 +71,8 @@ class BooksAPITestCase(APITestCase):
 
         books = Book.objects.filter(price=25).annotate(
             annotated_likes=Count(Case(When(userbookrelation__like=True, then=1))),
-            annotated_rating=Avg("userbookrelation__rate")
+            annotated_rating=Avg("userbookrelation__rate"),
+            owner_name=Coalesce(F("owner__username"), Value(""))
         ).order_by("id")
 
         serialized_data = BookSerializer(
@@ -87,7 +90,8 @@ class BooksAPITestCase(APITestCase):
 
         books = Book.objects.filter(id__in=[self.book2.id, self.book3.id]).annotate(
             annotated_likes=Count(Case(When(userbookrelation__like=True, then=1))),
-            annotated_rating=Avg("userbookrelation__rate")
+            annotated_rating=Avg("userbookrelation__rate"),
+            owner_name=Coalesce(F("owner__username"), Value(""))
         ).order_by("id")
 
         serialized_data = BookSerializer(
@@ -104,13 +108,13 @@ class BooksAPITestCase(APITestCase):
 
         books = Book.objects.all().annotate(
             annotated_likes=Count(Case(When(userbookrelation__like=True, then=1))),
-            annotated_rating=Avg("userbookrelation__rate")
+            annotated_rating=Avg("userbookrelation__rate"),
+            owner_name=Coalesce(F("owner__username"), Value(""))
         ).order_by("id").order_by("-price")
 
         serialized_data = BookSerializer(
             books, many=True
         ).data
-
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(
             serialized_data, response.data

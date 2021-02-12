@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from django.db.models import Count, Case, When, Avg
+from django.db.models import Count, Case, When, Avg, F, Value
+from django.db.models.functions import Coalesce
 from django.test import TestCase
 
 from store.models import Book, UserBookRelation
@@ -27,7 +28,8 @@ class BookSerializerTestCase(TestCase):
 
         books = Book.objects.all().annotate(
             annotated_likes=Count(Case(When(userbookrelation__like=True, then=1))),
-            annotated_rating=Avg("userbookrelation__rate")
+            annotated_rating=Avg("userbookrelation__rate"),
+            owner_name=Coalesce(F("owner__username"), Value(""))
         ).order_by("id")
         data = BookSerializer(books, many=True).data
 
