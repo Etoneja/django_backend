@@ -50,7 +50,6 @@ class BooksAPITestCase(APITestCase):
 
         books = Book.objects.all().annotate(
             annotated_likes=Count(Case(When(userbookrelation__like=True, then=1))),
-            annotated_rating=Avg("userbookrelation__rate"),
             owner_name=Coalesce(F("owner__username"), Value(""))
         ).order_by("id")
 
@@ -61,9 +60,8 @@ class BooksAPITestCase(APITestCase):
         self.assertEqual(
             serialized_data, response.data
         )
-        # self.assertEqual(serialized_data[0]["likes_count"], 1)
         self.assertEqual(serialized_data[2]["annotated_likes"], 1)
-        self.assertEqual(serialized_data[2]["annotated_rating"], "3.00")
+        self.assertEqual(serialized_data[2]["rating"], "3.00")
 
     def test_filter(self):
         url = reverse("book-list")
@@ -71,7 +69,6 @@ class BooksAPITestCase(APITestCase):
 
         books = Book.objects.filter(price=25).annotate(
             annotated_likes=Count(Case(When(userbookrelation__like=True, then=1))),
-            annotated_rating=Avg("userbookrelation__rate"),
             owner_name=Coalesce(F("owner__username"), Value(""))
         ).order_by("id")
 
@@ -90,7 +87,6 @@ class BooksAPITestCase(APITestCase):
 
         books = Book.objects.filter(id__in=[self.book2.id, self.book3.id]).annotate(
             annotated_likes=Count(Case(When(userbookrelation__like=True, then=1))),
-            annotated_rating=Avg("userbookrelation__rate"),
             owner_name=Coalesce(F("owner__username"), Value(""))
         ).order_by("id")
 
@@ -108,7 +104,6 @@ class BooksAPITestCase(APITestCase):
 
         books = Book.objects.all().annotate(
             annotated_likes=Count(Case(When(userbookrelation__like=True, then=1))),
-            annotated_rating=Avg("userbookrelation__rate"),
             owner_name=Coalesce(F("owner__username"), Value(""))
         ).order_by("id").order_by("-price")
 

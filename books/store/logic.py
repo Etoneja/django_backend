@@ -1,4 +1,9 @@
+from django.db.models import Avg
 
-def operations(a, b, c):
+from store.models import UserBookRelation
 
-    return eval(f"{a}{c}{b}")
+
+def set_rating(book):
+    rating = UserBookRelation.objects.filter(book=book).aggregate(rating=Avg("rate")).get("rating")
+    book.rating = rating
+    book.save()

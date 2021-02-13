@@ -13,9 +13,8 @@ class BookReaderSerializer(ModelSerializer):
 
 class BookSerializer(ModelSerializer):
 
-    # likes_count = serializers.SerializerMethodField(read_only=True)
     annotated_likes = serializers.IntegerField(read_only=True)
-    annotated_rating = serializers.DecimalField(max_digits=3, decimal_places=2, read_only=True)
+    rating = serializers.DecimalField(max_digits=3, decimal_places=2, read_only=True)
     owner_name = serializers.CharField(read_only=True, default="")
     readers = BookReaderSerializer(many=True, read_only=True)
 
@@ -23,19 +22,13 @@ class BookSerializer(ModelSerializer):
         model = Book
         fields = (
             "id", "name", "price", "author_name",
-            "annotated_likes", "annotated_rating",
+            "annotated_likes",
+            "rating",
             "owner_name", "readers"
         )
-
-    # def get_likes_count(self, instance):
-    #     likes_count = UserBookRelation.objects.filter(book=instance, like=True).count()
-    #     return likes_count
 
 
 class UserBookSerializer(ModelSerializer):
     class Meta:
         model = UserBookRelation
         fields = ("book", "like", "in_bookmarks", "rate")
-
-
-
